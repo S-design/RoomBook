@@ -11,7 +11,8 @@ const Authentication = ({ onAuthenticate }) => {
         try {
             // Send the PIN to the server for validation
             console.log('Sending PIN:', pin); // Debugging log
-            const response = await axios.post('http://localhost:5000/api/validate-pin', { pin });
+            const response = await axios.post('https://roombook-v6rk.onrender.com/api/validate-pin', { pin });
+            //http://localhost:5000
 
             if (response.status === 200) {
                 console.log('PIN validated successfully'); // Debugging log
