@@ -40,7 +40,7 @@ function AddBooking(props) {
                     type='button' 
                     className='btn btn-primary mt-3' 
                     onClick={submitBooking}
-                >Add Todo</button>
+                >Add Booking</button>
 
             </form>
         </div>

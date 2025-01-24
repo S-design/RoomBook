@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Calendar.css';
 import AddBooking from './AddBooking';
 import Authentication from './Authentication';
@@ -6,7 +6,10 @@ import Authentication from './Authentication';
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
-    const [bookings, setBookings] = useState({});
+    const [bookings, setBookings] = useState(() => {
+        const storedBookings = localStorage.getItem('bookings');
+        return storedBookings ? JSON.parse(storedBookings) : {};
+    });
     const [showForm, setShowForm] = useState(false);
     const [authenticated, setAuthenticated] = useState(false);
 
@@ -15,6 +18,10 @@ const Calendar = () => {
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
+
+    useEffect(() => {
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+    }, [bookings]);
 
     const getDaysInMonth = (year, month) => {
         return new Date(year, month + 1, 0).getDate();
@@ -60,6 +67,24 @@ const Calendar = () => {
         setShowForm(false);
     };
 
+    const removeBooking = (dateKey, index) => {
+        const password = prompt("Enter the password to remove the booking:");
+        if (password === "password") { // Replace "your_password" with your desired password
+            setBookings(prevBookings => {
+                const updatedBookings = { ...prevBookings };
+                if (updatedBookings[dateKey]) {
+                    updatedBookings[dateKey].splice(index, 1);
+                    if (updatedBookings[dateKey].length === 0) {
+                        delete updatedBookings[dateKey];
+                    }
+                }
+                return updatedBookings;
+            });
+        } else {
+            alert("Incorrect password. Booking was not removed.");
+        }
+    };
+
     const handleDayClick = (day) => {
         if (day) {
             const clickedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
@@ -100,6 +125,7 @@ const Calendar = () => {
                             }}
                         >
                             {day}
+                            <hr className="day-separator" />
                             {hasBookings && (
                                 <div className="booking-indicator">
                                     {bookings[dateKey].length} Booking{bookings[dateKey].length > 1 ? 's' : ''}
@@ -112,11 +138,16 @@ const Calendar = () => {
             {showForm && (
                 <div className="booking-form">
                     <h3>Bookings for {selectedDate?.toDateString()}</h3>
-                    <ul>
+                    <ul className="b-list">
                         {bookings[selectedDate?.toDateString()]?.map((booking, index) => (
-                            <li key={index}>
-                                <strong>Assigned:</strong> {booking.assigned} <br />
-                                <strong>Description:</strong> {booking.description}
+                            <li key={index} className="b-Litem">
+                                <strong className="b-assigned">Assigned: </strong> 
+                                {booking.assigned} 
+                                <br />
+                                <strong className="b-description">Description: </strong> 
+                                {booking.description} 
+                                <br />
+                                <button className="rm-b-btn" onClick={() => removeBooking(selectedDate.toDateString(), index)}>Remove</button>
                             </li>
                         ))}
                     </ul>
@@ -128,3 +159,4 @@ const Calendar = () => {
 };
 
 export default Calendar;
+
