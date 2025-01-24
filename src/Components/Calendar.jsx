@@ -141,11 +141,11 @@ const Calendar = () => {
                     <ul className="b-list">
                         {bookings[selectedDate?.toDateString()]?.map((booking, index) => (
                             <li key={index} className="b-Litem">
-                                <strong className="b-assigned">Assigned: </strong> 
-                                {booking.assigned} 
-                                <br />
-                                <strong className="b-description">Description: </strong> 
-                                {booking.description} 
+                                <div className="b-details">
+                                <span className="b-assigned"><h4>Assigned: {booking.assigned}</h4></span> 
+                                <span className="b-description"><h4>Description: </h4> <p className="p-description">{booking.description}</p> </span> 
+                                
+                                </div>
                                 <br />
                                 <button className="rm-b-btn" onClick={() => removeBooking(selectedDate.toDateString(), index)}>Remove</button>
                             </li>

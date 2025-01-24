@@ -68,12 +68,29 @@
     background-color: #f9f9f9;
 }
 
-.b-assigned, .b-description {
-    display: block;
-    margin-bottom: 5px;
-    color: #0d6efd; 
-    font-weight: bold;
+/* Styling for the booking details container */
+.b-details {
+    display: flex; /* Use flexbox to align items horizontally */
+    align-items: flex-start; /* Align the items to the start vertically */
+    gap: 15px; /* Add spacing between Assigned and Description */
 }
+
+/* Styling for the Assigned span */
+.b-assigned {
+    font-weight: bold; /* Make Assigned text bold */
+    
+}
+
+/* Styling for the Description span */
+.b-description {
+    flex: 1; /* Allow the description to take up the remaining space */
+    font-weight: bold;
+    word-wrap: break-word; /* Ensure the description wraps within the container */
+}
+.p-description {
+    font-weight: normal;
+}
+
 
 .rm-b-btn {
     margin-top: 10px;

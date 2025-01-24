@@ -1,0 +1,55 @@
+/* AddBooking Form Container */
+.add-booking-form {
+    max-width: 400px; /* Limit form width */
+    margin: 20px auto; /* Center form with vertical spacing */
+    padding: 20px; /* Add inner spacing */
+    border: 1px solid #ddd; /* Light border for structure */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9; /* Subtle background color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+/* Form Labels */
+.add-booking-form .form-label {
+    font-weight: bold;
+    color: #333; /* Darker text for contrast */
+    margin-bottom: 5px;
+    display: block; /* Ensure labels are on separate lines */
+}
+
+/* Input Fields */
+.add-booking-form .form-control {
+    width: 100%; /* Full width input */
+    padding: 10px; /* Inner spacing */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
+    transition: border-color 0.3s ease; /* Smooth transition for focus */
+}
+
+.add-booking-form .form-control:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3); /* Add subtle shadow */
+}
+
+/* Textarea */
+.add-booking-form .form-control[rows] {
+    resize: none; /* Prevent resizing */
+}
+
+/* Submit Button */
+.add-booking-form .btn-primary {
+    background-color: #007bff; /* Primary button color */
+    color: #fff; /* White text */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Add inner spacing */
+    font-size: 16px; /* Make button text larger */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.add-booking-form .btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
