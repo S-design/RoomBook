@@ -31,12 +31,28 @@ header {
     color: #A2CDFF; 
 }
 
+.Prev {
+    color: #A2CDFF;
+    background-color: #13117D;
+    transition: background-color 0.3s ease;
+}
+
+.Prev:hover {
+background-color: #0056b3;
+}
+
 /* Sidebar Styling */
 .booking-sidebar {
-    background: #f9f9f9;
+    color: #A2CDFF;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    background: rgb(19, 17, 125,);
+	background: radial-gradient(
+		circle,
+		rgba(19, 17, 125, 1) 0%,
+		rgba(25, 100, 196, 1) 100%
+    );
 }
 
 .booking-sidebar h3 {
@@ -47,14 +63,19 @@ header {
     list-style: none;
     padding: 0;
     margin: 0;
+    background: #A2CDFF;
+    border-radius: 5px;
+
 }
 
 .b-Litem {
+    color: #0A2A52;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 10px;
-    background: #fff;
+    background: #A2CDFF;
+ 
 }
 
 .rm-b-btn {
@@ -83,9 +104,21 @@ header {
     align-items: center;
     justify-content: center;
     padding: 10px;
-    border: 1px solid #ddd;
-    background: #f0f0f0;
+    border: 1px solid #0A2A52;
+    color: #A2CDFF;
+    /* background: #206FE0; */
     border-radius: 4px;
+    background: rgb(25, 100, 196);
+	background: radial-gradient(
+		circle,
+		rgba(25, 100, 196, 1) 0%,
+		rgba(19, 17, 125, 1) 100%
+    );
+}
+
+.calendar-header {
+    font-weight: bold;
+    
 }
 
 .calendar-day {
@@ -94,17 +127,14 @@ header {
     align-items: center;
     justify-content: flex-start; /* Align items at the top */
     padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color:  rgb(25, 100, 196);
+    border: 1px solid #0A2A52;
     cursor: pointer;
     border-radius: 4px;
     position: relative; /* Allow absolute positioning for children */
 }
 
-.calendar-day.has-bookings {
-    background-color: #d1e7dd;
-    border: 2px solid #0f5132;
-}
+
 
 .calendar-day .day-number {
     position: absolute;
@@ -118,6 +148,10 @@ header {
 .day-separator {
     margin: 10px 0; /* Space below the day number */
     border: none;
-    border-top: 1px solid #ccc;
+    border-top: 2px solid #0A2A52;
     width: 80%;
+}
+
+.calendar-day.has-bookings {
+    background: #206FE0;
 }

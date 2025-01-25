@@ -102,12 +102,12 @@ const Calendar = () => {
                 <h1 className="title">Book a Room</h1>
                 <h2 className="sub-title">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</h2>
                 <button className="Prev" onClick={goToPreviousMonth}>Prev</button>
-                <button className="Next" onClick={goToNextMonth}>Next</button>
+                <button className="Prev" onClick={goToNextMonth}>Next</button>
             </header>
             <div className="main-content">
                 {/* Sidebar for Bookings */}
                 <aside className="booking-sidebar">
-                    <h3>Bookings for {selectedDate?.toDateString() || 'No date selected'}</h3>
+                    <h3 className="sidebar-title">Bookings for {selectedDate?.toDateString() || 'No date selected'}</h3>
                     <ul className="b-list">
                         {selectedDate && bookings[selectedDate.toDateString()]?.length > 0 ? (
                             bookings[selectedDate.toDateString()].map((booking, index) => (

@@ -2,17 +2,17 @@
 .add-booking-form {
     max-width: 400px; /* Limit form width */
     margin: 20px auto; /* Center form with vertical spacing */
-    padding: 20px; /* Add inner spacing */
-    border: 1px solid #ddd; /* Light border for structure */
-    border-radius: 8px; /* Rounded corners */
-    background-color: #f9f9f9; /* Subtle background color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    padding: 20px; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    background-color: #A2CDFF; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
 /* Form Labels */
 .add-booking-form .form-label {
     font-weight: bold;
-    color: #333; /* Darker text for contrast */
+    color: #0A2A52; /* Darker text for contrast */
     margin-bottom: 5px;
     display: block; /* Ensure labels are on separate lines */
 }
@@ -40,12 +40,12 @@
 
 /* Submit Button */
 .add-booking-form .btn-primary {
-    background-color: #007bff; /* Primary button color */
-    color: #fff; /* White text */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px 15px; /* Add inner spacing */
-    font-size: 16px; /* Make button text larger */
+    color: #A2CDFF;
+    background-color: #13117D;
+    border: none; 
+    border-radius: 5px; 
+    padding: 10px 15px; 
+    font-size: 16px; 
     cursor: pointer;
     transition: background-color 0.3s ease; /* Smooth hover transition */
 }
