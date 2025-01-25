@@ -69,7 +69,7 @@ const Calendar = () => {
 
     const removeBooking = (dateKey, index) => {
         const password = prompt("Enter the password to remove the booking:");
-        if (password === "password") { // Replace "your_password" with your desired password
+        if (password === "password") {
             setBookings(prevBookings => {
                 const updatedBookings = { ...prevBookings };
                 if (updatedBookings[dateKey]) {
@@ -89,7 +89,6 @@ const Calendar = () => {
         if (day) {
             const clickedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
             setSelectedDate(clickedDate);
-            setShowForm(true);
         }
     };
 
@@ -98,65 +97,69 @@ const Calendar = () => {
     }
 
     return (
-        <div className="main">
+        <div className="app-container">
             <header>
                 <h1 className="title">Book a Room</h1>
                 <h2 className="sub-title">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</h2>
-                <button onClick={goToPreviousMonth}>Prev</button>
-                <button onClick={goToNextMonth}>Next</button>
+                <button className="Prev" onClick={goToPreviousMonth}>Prev</button>
+                <button className="Next" onClick={goToNextMonth}>Next</button>
             </header>
-            <div className="calendar">
-                {daysOfWeek.map(day => (
-                    <div key={day} className="calendar-header">{day}</div>
-                ))}
-                {days.map((day, index) => {
-                    const dateKey = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)?.toDateString();
-                    const hasBookings = bookings[dateKey]?.length > 0;
+            <div className="main-content">
+                {/* Sidebar for Bookings */}
+                <aside className="booking-sidebar">
+                    <h3>Bookings for {selectedDate?.toDateString() || 'No date selected'}</h3>
+                    <ul className="b-list">
+                        {selectedDate && bookings[selectedDate.toDateString()]?.length > 0 ? (
+                            bookings[selectedDate.toDateString()].map((booking, index) => (
+                                <li key={index} className="b-Litem">
+                                    <strong>Assigned:</strong> {booking.assigned} <br />
+                                    <strong>Description:</strong> {booking.description} <br />
+                                    <button
+                                        className="rm-b-btn"
+                                        onClick={() => removeBooking(selectedDate.toDateString(), index)}
+                                    >
+                                        Remove
+                                    </button>
+                                </li>
+                            ))
+                        ) : (
+                            <p>No bookings for this date.</p>
+                        )}
+                    </ul>
+                    {selectedDate && <AddBooking addBooking={addBooking} />}
+                </aside>
 
-                    return (
-                        <div
-                            key={index}
-                            className="calendar-day"
-                            onClick={() => handleDayClick(day)}
-                            style={{
-                                cursor: day ? 'pointer' : 'default',
-                                backgroundColor: hasBookings ? '#d1e7dd' : '#f0f0f0',
-                                border: hasBookings ? '2px solid #0f5132' : '1px solid #ccc',
-                            }}
-                        >
-                            {day}
-                            <hr className="day-separator" />
-                            {hasBookings && (
+                {/* Calendar Grid */}
+                <div className="calendar">
+                    {daysOfWeek.map(day => (
+                        <div key={day} className="calendar-header">{day}</div>
+                    ))}
+                    {days.map((day, index) => {
+                        const dateKey = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)?.toDateString();
+                        const hasBookings = bookings[dateKey]?.length > 0;
+
+                        return (
+                            <div
+                                key={index}
+                                className={`calendar-day ${hasBookings ? 'has-bookings' : ''}`}
+                                onClick={() => handleDayClick(day)}
+                            >
+                                {day}
+                                <hr className="day-separator" />
+                                {hasBookings && (
                                 <div className="booking-indicator">
                                     {bookings[dateKey].length} Booking{bookings[dateKey].length > 1 ? 's' : ''}
                                 </div>
                             )}
-                        </div>
-                    );
-                })}
-            </div>
-            {showForm && (
-                <div className="booking-form">
-                    <h3 className="b-title">Bookings for {selectedDate?.toDateString()}</h3>
-                    <ul className="b-list">
-                        {bookings[selectedDate?.toDateString()]?.map((booking, index) => (
-                            <li key={index} className="b-Litem">
-                                <div className="b-details">
-                                <span className="b-assigned"><h4>Assigned: {booking.assigned}</h4></span> 
-                                <span className="b-description"><h4>Description: </h4> <p className="p-description">{booking.description}</p> </span> 
-                                
-                                </div>
-                                <br />
-                                <button className="rm-b-btn" onClick={() => removeBooking(selectedDate.toDateString(), index)}>Remove</button>
-                            </li>
-                        ))}
-                    </ul>
-                    <AddBooking addBooking={addBooking} />
+                            </div>
+                        );
+                    })}
                 </div>
-            )}
+            </div>
         </div>
     );
 };
 
 export default Calendar;
+
 
