@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Authentication.css'
+import './Authentication.css';
 
 const Authentication = ({ onAuthenticate }) => {
     const [pin, setPin] = useState('');
@@ -9,18 +9,23 @@ const Authentication = ({ onAuthenticate }) => {
     const handlePinSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            // Send the PIN to the server for validation
-            console.log('Sending PIN:', pin); // Debugging log
-            const response = await axios.post('https://roombook-v6rk.onrender.com/api/validate-pin', { pin });
-            //http://localhost:5000
+        // Client-side validation
+        if (pin.length < 4 || pin.length > 6) {
+            setError('PIN must be between 4 and 6 characters.');
+            return;
+        }
 
+        if (!/^\d+$/.test(pin)) {
+            setError('PIN must contain only numeric characters.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('https://roombook-v6rk.onrender.com/api/validate-pin', { pin });
             if (response.status === 200) {
-                console.log('PIN validated successfully'); // Debugging log
                 onAuthenticate(); // Proceed with authentication
             }
         } catch (err) {
-            console.error('Error validating PIN:', err); // Debugging log
             setError(err.response?.data?.message || 'An error occurred. Please try again.');
         }
     };
@@ -43,4 +48,3 @@ const Authentication = ({ onAuthenticate }) => {
 };
 
 export default Authentication;
-
