@@ -1,0 +1,17 @@
+.access-title {
+    color: #A2CDFF;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    text-shadow: none;
+}
+
+.submit-btn {
+    margin-left: 5px;
+    color: #A2CDFF;
+    background-color: #13117D;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}

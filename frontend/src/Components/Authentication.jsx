@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Authentication.css'
 
 const Authentication = ({ onAuthenticate }) => {
     const [pin, setPin] = useState('');
@@ -26,7 +27,7 @@ const Authentication = ({ onAuthenticate }) => {
 
     return (
         <div className="authentication">
-            <h2>Enter PIN to Access Calendar</h2>
+            <h2 className="access-title">Enter PIN to Access Calendar</h2>
             <form onSubmit={handlePinSubmit}>
                 <input
                     type="password"
@@ -34,7 +35,7 @@ const Authentication = ({ onAuthenticate }) => {
                     onChange={(e) => setPin(e.target.value)}
                     placeholder="Enter PIN"
                 />
-                <button type="submit">Submit</button>
+                <button className="submit-btn" type="submit">Submit</button>
             </form>
             {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
