@@ -98,10 +98,10 @@ const Calendar = () => {
     }
 
     return (
-        <div>
+        <div className="main">
             <header>
-                <h1>Book a Room</h1>
-                <h2>{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</h2>
+                <h1 className="title">Book a Room</h1>
+                <h2 className="sub-title">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</h2>
                 <button onClick={goToPreviousMonth}>Prev</button>
                 <button onClick={goToNextMonth}>Next</button>
             </header>
@@ -137,7 +137,7 @@ const Calendar = () => {
             </div>
             {showForm && (
                 <div className="booking-form">
-                    <h3>Bookings for {selectedDate?.toDateString()}</h3>
+                    <h3 className="b-title">Bookings for {selectedDate?.toDateString()}</h3>
                     <ul className="b-list">
                         {bookings[selectedDate?.toDateString()]?.map((booking, index) => (
                             <li key={index} className="b-Litem">
