@@ -69,7 +69,7 @@ const Calendar = () => {
 
     const removeBooking = (dateKey, index) => {
         const password = prompt("Enter the password to remove the booking:");
-        if (password === "password") {
+        if (password === import.meta.env.VITE_REMOVE_BOOKING_PASSWORD) {
             setBookings(prevBookings => {
                 const updatedBookings = { ...prevBookings };
                 if (updatedBookings[dateKey]) {
@@ -84,6 +84,7 @@ const Calendar = () => {
             alert("Incorrect password. Booking was not removed.");
         }
     };
+    
 
     const handleDayClick = (day) => {
         if (day) {
