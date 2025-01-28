@@ -13,7 +13,7 @@ dotenv.config();
 //for configuration
 const PORT = process.env.PORT || 5000;
 const PIN = process.env.PIN || '2334';
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://s-design.github.io/RoomBook';
 
 const hashedPin = bcrypt.hashSync(PIN, 10);
 
@@ -23,8 +23,9 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 app.use(cors({
-    origin: FRONTEND_URL, // Replace with your frontend's URL during development
-    methods: ['POST'], // Allow POST requests
+    origin: [FRONTEND_URL], // Replace with your frontend's URL during development
+    methods: ['POST'],
+    credentials: true, // Allow POST requests
 }));
 app.use(helmet());
 

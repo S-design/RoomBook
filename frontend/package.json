@@ -2,7 +2,7 @@
   "name": "react-roombook",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://s-design.github.io/RoomBook/",
+  "homepage": "https://s-design.github.io/RoomBook",
   "type": "module",
   "scripts": {
     "dev": "vite",
