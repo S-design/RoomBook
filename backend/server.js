@@ -12,8 +12,13 @@ dotenv.config();
 
 //for configuration
 const PORT = process.env.PORT || 5000;
-const PIN = process.env.PIN || '2334';
+const PIN = process.env.PIN;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://s-design.github.io/RoomBook';
+
+if (!PIN) {
+    throw new Error('Environment variable PIN is not set!');
+}
+
 
 const hashedPin = bcrypt.hashSync(PIN, 10);
 
@@ -28,27 +33,31 @@ app.use(cors({
     origin: (origin, callback) => {
         const allowedOrigins = ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'];
         if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true); // Allow the request
+            callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS')); // Reject the request
+            console.warn(`Blocked CORS request from origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
         }
     },
-    methods: ['GET', 'POST'], // Allow specific HTTP methods
+    methods: ['GET', 'POST'],
 }));
-
-
+app.options('*', cors());
 app.use(helmet());
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
 
 
 // Rate limiting middleware
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // Limit each IP to 10 requests per windowMs
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: 'Too many attempts, please try again later.',
+    max: 10,
+    handler: (req, res) => {
+        console.warn(`Rate limit exceeded for IP: ${req.ip}`);
+        res.status(429).send('Too many attempts, please try again later.');
+    },
 });
 app.use('/api', limiter);
+
 
 // API endpoint to validate the PIN 
 app.post('/api/validate-pin', async (req, res) => {
@@ -75,4 +84,6 @@ app.post('/api/validate-pin', async (req, res) => {
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Frontend URL: ${FRONTEND_URL}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
