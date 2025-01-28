@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import apiClient from '../api/apiClient'; // Use your centralized Axios instance
+import apiClient from '../api/apiClient';
 import './Authentication.css';
 
 const Authentication = ({ onAuthenticate }) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false); // Define isSubmitting state
 
     const handlePinSubmit = async (e) => {
         e.preventDefault();
@@ -21,7 +22,7 @@ const Authentication = ({ onAuthenticate }) => {
         }
 
         try {
-            // Use apiClient for the API request
+            setIsSubmitting(true); // Set isSubmitting to true while processing
             const response = await apiClient.post('/api/validate-pin', { pin });
 
             if (response.status === 200) {
@@ -29,8 +30,9 @@ const Authentication = ({ onAuthenticate }) => {
                 setError(''); // Clear errors if any
             }
         } catch (err) {
-            // Handle errors gracefully
             setError(err.response?.data?.message || 'An error occurred. Please try again.');
+        } finally {
+            setIsSubmitting(false); // Reset isSubmitting regardless of success or failure
         }
     };
 
@@ -43,16 +45,16 @@ const Authentication = ({ onAuthenticate }) => {
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
                     placeholder="Enter PIN"
-                    maxLength="6" // Limit the input length to avoid unnecessary errors
-                    aria-lable="Enter your PIN"
+                    maxLength="6"
+                    disabled={isSubmitting} // Disable input while submitting
                 />
                 <button
-  className="submit-btn"
-  type="submit"
-  disabled={!pin || isSubmitting}
->
-  {isSubmitting ? 'Submitting...' : 'Submit'}
-</button>
+                    className="submit-btn"
+                    type="submit"
+                    disabled={isSubmitting} // Disable button while submitting
+                >
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                </button>
             </form>
             {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
         </div>
@@ -60,3 +62,4 @@ const Authentication = ({ onAuthenticate }) => {
 };
 
 export default Authentication;
+
