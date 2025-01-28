@@ -23,21 +23,20 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 
-const allowedOrigins = [
-    'https://s-design.github.io/RoomBook', // GitHub Pages
-    'http://localhost:5173'       // Local development
-];
+
 app.use(cors({
     origin: (origin, callback) => {
-        if (allowedOrigins.includes(origin) || !origin) {
-            callback(null, true);
+        const allowedOrigins = ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true); // Allow the request
         } else {
-            callback(new Error('Not allowed by CORS'));
+            callback(new Error('Not allowed by CORS')); // Reject the request
         }
-    }, // Replace with your frontend's URL during development
-    methods: ['POST'],
-    credentials: true, // Allow POST requests
+    },
+    methods: ['GET', 'POST'], // Allow specific HTTP methods
 }));
+
+
 app.use(helmet());
 
 
