@@ -22,8 +22,19 @@ const app = express();
 
 // Middleware
 app.use(bodyParser.json());
+
+const allowedOrigins = [
+    'https://s-design.github.io/RoomBook', // GitHub Pages
+    'http://localhost:5173'       // Local development
+];
 app.use(cors({
-    origin: [FRONTEND_URL], // Replace with your frontend's URL during development
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }, // Replace with your frontend's URL during development
     methods: ['POST'],
     credentials: true, // Allow POST requests
 }));
