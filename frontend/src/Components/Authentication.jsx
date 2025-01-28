@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../api/apiClient'; // Use your centralized Axios instance
 import './Authentication.css';
 
 const Authentication = ({ onAuthenticate }) => {
@@ -11,7 +11,7 @@ const Authentication = ({ onAuthenticate }) => {
 
         // Client-side validation
         if (pin.length < 4 || pin.length > 6) {
-            setError('PIN must be between 4 and 6 characters.');
+            setError('PIN must be between 4 and 6 numeric characters.');
             return;
         }
 
@@ -21,11 +21,15 @@ const Authentication = ({ onAuthenticate }) => {
         }
 
         try {
-            const response = await axios.post('https://roombook-v6rk.onrender.com/api/validate-pin', { pin });
+            // Use apiClient for the API request
+            const response = await apiClient.post('/api/validate-pin', { pin });
+
             if (response.status === 200) {
-                onAuthenticate(); // Proceed with authentication
+                onAuthenticate(); // Call the callback on successful authentication
+                setError(''); // Clear errors if any
             }
         } catch (err) {
+            // Handle errors gracefully
             setError(err.response?.data?.message || 'An error occurred. Please try again.');
         }
     };
@@ -39,10 +43,18 @@ const Authentication = ({ onAuthenticate }) => {
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
                     placeholder="Enter PIN"
+                    maxLength="6" // Limit the input length to avoid unnecessary errors
+                    aria-lable="Enter your PIN"
                 />
-                <button className="submit-btn" type="submit">Submit</button>
+                <button
+  className="submit-btn"
+  type="submit"
+  disabled={!pin || isSubmitting}
+>
+  {isSubmitting ? 'Submitting...' : 'Submit'}
+</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };

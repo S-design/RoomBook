@@ -1,8 +1,15 @@
+.authentication {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
 .access-title {
     color: #A2CDFF;
     font-family: Arial, sans-serif;
     font-weight: normal;
     text-shadow: none;
+    margin-bottom: 20px;
 }
 
 .submit-btn {
@@ -10,8 +17,19 @@
     color: #A2CDFF;
     background-color: #13117D;
     transition: background-color 0.3s ease;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .submit-btn:hover {
     background-color: #0056b3;
+}
+
+.error-message {
+    margin-top: 10px;
+    color: red;
+    font-size: 14px;
 }
