@@ -35,7 +35,7 @@ const Calendar = () => {
     const addBooking = async (description, assigned) => {
         try {
             const response = await apiClient.post('/api/bookings', {
-                date: selectedDate.toDateString(),
+                date: selectedDate.toDateString(), // Ensure correct date is sent
                 description,
                 assigned,
             });
@@ -44,6 +44,7 @@ const Calendar = () => {
             console.error(err);
         }
     };
+    
 
     const removeBooking = async (index) => {
         try {

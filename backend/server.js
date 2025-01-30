@@ -116,18 +116,25 @@ app.post('/api/bookings', async (req, res) => {
     }
 
     try {
-        const booking = await Booking.findOneAndUpdate(
-            { date },
-            { $push: { bookings: { description, assigned } } },
-            { new: true, upsert: true }
-        );
+        // Find the existing booking for the given date
+        let booking = await Booking.findOne({ date });
+
+        if (!booking) {
+            // If no booking exists for this date, create a new one
+            booking = new Booking({ date, bookings: [] });
+        }
+
+        // Add the new booking only to the selected date
+        booking.bookings.push({ description, assigned });
+
+        await booking.save(); // Save changes to MongoDB
+
         res.status(200).json(booking);
     } catch (err) {
         console.error('❌ Error adding booking:', err);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
 // Remove a Booking
 app.delete('/api/bookings/:date/:index', async (req, res) => {
     try {
