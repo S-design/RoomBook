@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Calendar.css';
 import AddBooking from './AddBooking';
 import Authentication from './Authentication';
-import apiClient from '../apiClient';
+import apiClient from '../api/apiClient';
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
