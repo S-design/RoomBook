@@ -8,8 +8,8 @@ const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
     const [bookings, setBookings] = useState([]);
-    const [showForm, setShowForm] = useState(false);
     const [authenticated, setAuthenticated] = useState(false);
+    const [allBookings, setAllBookings] = useState({}); // Store all bookings
 
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const monthNames = [
@@ -17,41 +17,54 @@ const Calendar = () => {
         "July", "August", "September", "October", "November", "December"
     ];
 
-    useEffect(() => {
-        if (selectedDate) fetchBookings(selectedDate.toDateString());
-    }, [selectedDate]);
-
-    const fetchBookings = async (date) => {
+    // 📌 Fetch all bookings from API
+    const fetchAllBookings = async () => {
         try {
-            const response = await apiClient.get(`/api/bookings/${date}`);
-            setBookings(response.data?.bookings || []);
+            const response = await apiClient.get('/api/bookings'); // Fetch all bookings
+            const bookingsMap = {};
+    
+            response.data.forEach(booking => {
+                bookingsMap[booking.date] = booking.bookings; // Store bookings by date
+            });
+    
+            setAllBookings(bookingsMap);
         } catch (err) {
-            console.error(err);
-            setBookings([]); // Ensure state resets on failure
+            console.error('❌ API Error:', err.response?.data || err.message);
+            setAllBookings({});
         }
     };
     
+    useEffect(() => {
+        fetchAllBookings();
+    }, []);
 
+    // 📌 Fetch bookings for selected date
+    useEffect(() => {
+        if (selectedDate) {
+            const formattedDate = selectedDate.toISOString().split('T')[0];
+            setBookings(allBookings[formattedDate] || []);
+        }
+    }, [selectedDate, allBookings]);
+
+    // 📌 Add Booking
     const addBooking = async (description, assigned) => {
         try {
-            const response = await apiClient.post('/api/bookings', {
-                date: selectedDate.toDateString(), // Ensure correct date is sent
-                description,
-                assigned,
-            });
-            setBookings(response.data.bookings);
+            const formattedDate = selectedDate.toISOString().split('T')[0];
+            await apiClient.post('/api/bookings', { date: formattedDate, description, assigned });
+
+            fetchAllBookings(); // Refresh all bookings
         } catch (err) {
             console.error(err);
         }
     };
-    
 
+    // 📌 Remove Booking
     const removeBooking = async (index) => {
         try {
             const password = prompt("Enter the password to remove the booking:");
             if (password === import.meta.env.VITE_REMOVE_BOOKING_PASSWORD) {
-                await apiClient.delete(`/api/bookings/${selectedDate.toDateString()}/${index}`);
-                setBookings(prev => prev.filter((_, i) => i !== index)); // Remove from state
+                await apiClient.delete(`/api/bookings/${selectedDate.toISOString().split('T')[0]}/${index}`);
+                fetchAllBookings(); // Refresh all bookings
             } else {
                 alert("Incorrect password. Booking was not removed.");
             }
@@ -59,11 +72,8 @@ const Calendar = () => {
             console.error('Error removing booking:', err);
         }
     };
-    
 
-    const getDaysInMonth = (year, month) => {
-        return new Date(year, month + 1, 0).getDate();
-    };
+    const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
 
     const generateCalendarDays = () => {
         const days = [];
@@ -83,13 +93,8 @@ const Calendar = () => {
 
     const days = generateCalendarDays();
 
-    const goToPreviousMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-    };
-
-    const goToNextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-    };
+    const goToPreviousMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+    const goToNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
 
     const handleDayClick = (day) => {
         if (day) {
@@ -109,6 +114,7 @@ const Calendar = () => {
                 <button className="Prev" onClick={goToPreviousMonth}>Prev</button>
                 <button className="Next" onClick={goToNextMonth}>Next</button>
             </header>
+            
             <div className="main-content">
                 {/* Sidebar for Bookings */}
                 <aside className="booking-sidebar">
@@ -129,15 +135,17 @@ const Calendar = () => {
                     {selectedDate && <AddBooking addBooking={addBooking} />}
                 </aside>
 
-                {/* Calendar Grid */}
+                {/* 📌 UPDATED CALENDAR GRID */}
                 <div className="calendar">
                     {daysOfWeek.map(day => (
                         <div key={day} className="calendar-header">{day}</div>
                     ))}
-                    {days.map((day, index) => {
-                        const dateKey = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)?.toDateString();
-                        const hasBookings = bookings.length > 0;
 
+                    {days.map((day, index) => {
+                        if (!day) return <div key={index} className="calendar-day empty"></div>;
+
+                        const dateKey = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
+                        const hasBookings = allBookings[dateKey]?.length > 0;
 
                         return (
                             <div
@@ -149,7 +157,7 @@ const Calendar = () => {
                                 <hr className="day-separator" />
                                 {hasBookings && (
                                     <div className="booking-indicator">
-                                        {bookings.length} Booking{bookings.length > 1 ? 's' : ''}
+                                        {allBookings[dateKey].length} Booking{allBookings[dateKey].length > 1 ? 's' : ''}
                                     </div>
                                 )}
                             </div>
@@ -162,5 +170,3 @@ const Calendar = () => {
 };
 
 export default Calendar;
-
-
