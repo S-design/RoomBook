@@ -33,6 +33,7 @@ const Calendar = () => {
             setAllBookings({});
         }
     };
+
     
     useEffect(() => {
         fetchAllBookings();

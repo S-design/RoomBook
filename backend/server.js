@@ -93,8 +93,7 @@ app.post('/api/validate-pin', async (req, res) => {
     }
 });
 
-// API: Get Bookings
-// Fetch Bookings for a Date
+// ✅ Existing Route: Fetch bookings for a specific date
 app.get('/api/bookings/:date', async (req, res) => {
     try {
         const booking = await Booking.findOne({ date: req.params.date });
@@ -107,6 +106,34 @@ app.get('/api/bookings/:date', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+
+// // API: Get Bookings
+// // Fetch Bookings for a Date
+// app.get('/api/bookings/:date', async (req, res) => {
+//     try {
+//         const booking = await Booking.findOne({ date: req.params.date });
+//         if (!booking) {
+//             return res.status(404).json({ message: 'No bookings found.' });
+//         }
+//         res.status(200).json(booking);
+//     } catch (err) {
+//         console.error('❌ Error fetching bookings:', err);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// });
+
+// API: Get All Bookings (Fixes the 404 Error)
+app.get('/api/bookings', async (req, res) => {
+    try {
+        const allBookings = await Booking.find(); // Fetch all bookings
+        res.status(200).json(allBookings);
+    } catch (err) {
+        console.error('❌ Error fetching all bookings:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 // Add a Booking
 app.post('/api/bookings', async (req, res) => {
