@@ -27,9 +27,16 @@ const hashedPin = bcrypt.hashSync(PIN, 10);
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => console.log('✅ Connected to MongoDB'))
-    .catch(err => console.error('❌ MongoDB connection error:', err));
+    .catch(err => {
+        console.error('❌ MongoDB connection error:', err);
+        process.exit(1); // Exit process if database connection fails
+    });
+
 
 // Booking Schema
 const bookingSchema = new mongoose.Schema({
@@ -39,25 +46,47 @@ const bookingSchema = new mongoose.Schema({
 
 const Booking = mongoose.model('Booking', bookingSchema);
 
+// // Middleware
+// app.use(bodyParser.json());
+// app.use(cors({
+//     origin: (origin, callback) => {
+//         const allowedOrigins = ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'];
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             console.warn(`Blocked CORS request from origin: ${origin}`);
+//             callback(new Error('Not allowed by CORS'));
+//         }
+//     },
+//     methods: ['GET', 'POST', 'DELETE'],
+// }));
+// app.options('*', cors());
+
+
+
 // Middleware
 app.use(bodyParser.json());
+
+// ✅ Correct CORS Configuration
 app.use(cors({
-    origin: (origin, callback) => {
-        const allowedOrigins = ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.warn(`Blocked CORS request from origin: ${origin}`);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'DELETE'],
+    origin: ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'], // Ensure OPTIONS method is allowed
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+    credentials: true,
 }));
-app.options('*', cors());
+
+// ✅ Explicitly handle preflight requests
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.sendStatus(200);
+});
+
+
 app.use(helmet());
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
-
 
 // Rate limiting middleware
 const limiter = rateLimit({
