@@ -17,7 +17,7 @@ const Calendar = () => {
         "July", "August", "September", "October", "November", "December"
     ];
 
-    // 📌 Fetch all bookings from API
+    //  Fetch all bookings from API
     const fetchAllBookings = async () => {
         try {
             const response = await apiClient.get('/api/bookings'); // Fetch all bookings
@@ -39,7 +39,7 @@ const Calendar = () => {
         fetchAllBookings();
     }, []);
 
-    // 📌 Fetch bookings for selected date
+    //  Fetch bookings for selected date
     useEffect(() => {
         if (selectedDate) {
             const formattedDate = selectedDate.toISOString().split('T')[0];
@@ -47,7 +47,7 @@ const Calendar = () => {
         }
     }, [selectedDate, allBookings]);
 
-    // 📌 Add Booking
+    //  Add Booking
     const addBooking = async (description, assigned) => {
         try {
             const formattedDate = selectedDate.toISOString().split('T')[0];
@@ -59,7 +59,7 @@ const Calendar = () => {
         }
     };
 
-    // 📌 Remove Booking
+    //  Remove Booking
     const removeBooking = async (index) => {
         try {
             const password = prompt("Enter the password to remove the booking:");
@@ -113,7 +113,7 @@ const Calendar = () => {
                 <h1 className="title">Book a Room</h1>
                 <h2 className="sub-title">{monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}</h2>
                 <button className="Prev" onClick={goToPreviousMonth}>Prev</button>
-                <button className="Next" onClick={goToNextMonth}>Next</button>
+                <button className="Prev" onClick={goToNextMonth}>Next</button>
             </header>
             
             <div className="main-content">
@@ -136,7 +136,7 @@ const Calendar = () => {
                     {selectedDate && <AddBooking addBooking={addBooking} />}
                 </aside>
 
-                {/* 📌 UPDATED CALENDAR GRID */}
+                {/*  UPDATED CALENDAR GRID */}
                 <div className="calendar">
                     {daysOfWeek.map(day => (
                         <div key={day} className="calendar-header">{day}</div>

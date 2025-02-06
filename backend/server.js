@@ -46,38 +46,32 @@ const bookingSchema = new mongoose.Schema({
 
 const Booking = mongoose.model('Booking', bookingSchema);
 
-// // Middleware
-// app.use(bodyParser.json());
-// app.use(cors({
-//     origin: (origin, callback) => {
-//         const allowedOrigins = ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'];
-//         if (!origin || allowedOrigins.includes(origin)) {
-//             callback(null, true);
-//         } else {
-//             console.warn(`Blocked CORS request from origin: ${origin}`);
-//             callback(new Error('Not allowed by CORS'));
-//         }
-//     },
-//     methods: ['GET', 'POST', 'DELETE'],
-// }));
-// app.options('*', cors());
-
-
 
 // Middleware
 app.use(bodyParser.json());
 
 // ✅ Correct CORS Configuration
+const allowedOrigins = ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'];
+
 app.use(cors({
-    origin: ['https://s-design.github.io', 'https://s-design.github.io/RoomBook', 'http://localhost:5173'],
-    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'], // Ensure OPTIONS method is allowed
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'], 
+    allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true,
 }));
 
 // ✅ Explicitly handle preflight requests
 app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    if (allowedOrigins.includes(req.headers.origin)) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Credentials', 'true'); 
+    }
     res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.sendStatus(200);
@@ -136,21 +130,6 @@ app.get('/api/bookings/:date', async (req, res) => {
     }
 });
 
-
-// // API: Get Bookings
-// // Fetch Bookings for a Date
-// app.get('/api/bookings/:date', async (req, res) => {
-//     try {
-//         const booking = await Booking.findOne({ date: req.params.date });
-//         if (!booking) {
-//             return res.status(404).json({ message: 'No bookings found.' });
-//         }
-//         res.status(200).json(booking);
-//     } catch (err) {
-//         console.error('❌ Error fetching bookings:', err);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// });
 
 // API: Get All Bookings (Fixes the 404 Error)
 app.get('/api/bookings', async (req, res) => {

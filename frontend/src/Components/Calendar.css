@@ -134,8 +134,6 @@ background-color: #0056b3;
     position: relative; /* Allow absolute positioning for children */
 }
 
-
-
 .calendar-day .day-number {
     position: absolute;
     top: 10px; /* Position it near the top */
